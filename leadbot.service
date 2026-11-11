@@ -1,0 +1,21 @@
+# Служба systemd: бот запускается вместе с сервером и сам перезапускается при падении.
+# Установка (на сервере, из папки ~/lead_bot):
+#   sudo cp deploy/leadbot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now leadbot
+# Если имя пользователя на сервере не ubuntu — замените его в строках ниже.
+
+[Unit]
+Description=Telegram lead bot
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/home/ubuntu/lead_bot
+ExecStart=/home/ubuntu/lead_bot/venv/bin/python bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
